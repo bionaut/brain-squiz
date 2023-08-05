@@ -1,10 +1,9 @@
-export ENVIRONMENT=brain_local
+# variables
+source ./vars.sh
 
-# Run other scripts
-echo "Creating Kubernetes namespace..."
+# Run scripts
 ./1_create_namespace.sh
-
-echo "Installing RabbitMQ operator..."
-./2_install_rabbitmq_operator.sh
+./2_install_psql_operator.sh
+./3_install_rabbitmq_operator.sh
 
 echo "Deployment complete!"

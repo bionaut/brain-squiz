@@ -1,0 +1,71 @@
+{
+  "name": "services-questions",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/services/questions/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "target": "node",
+        "compiler": "tsc",
+        "outputPath": "dist/apps/services/questions",
+        "main": "apps/services/questions/src/main.ts",
+        "tsConfig": "apps/services/questions/tsconfig.app.json",
+        "assets": ["apps/services/questions/src/assets"],
+        "isolatedConfig": true,
+        "webpackConfig": "apps/services/questions/webpack.config.js"
+      },
+      "configurations": {
+        "development": {},
+        "production": {}
+      }
+    },
+    "prepare": {
+      "executor": "nx:run-commands",
+        "options": {
+          "command": "drizzle-kit generate:pg --config ./apps/services/questions/drizzle.config.ts"
+        }
+    },
+    "serve": {
+      "dependsOn": ["prepare"],
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "services-questions:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "services-questions:build:development"
+        },
+        "production": {
+          "buildTarget": "services-questions:build:production"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/services/questions/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/services/questions/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
+      }
+    }
+  },
+  "tags": []
+}

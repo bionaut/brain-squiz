@@ -1,7 +1,11 @@
 global:
-  namespace: 'brain_local'
+  namespace: 'engeto-brainsquiz'
   nodeEnv: 'development'
   apiHost: 'localhost'
+
+  openai:
+    org: 'openai'
+    secret: '123'
 
   image:
     repository: "k8s.io"
