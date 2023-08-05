@@ -5,6 +5,7 @@
   "scripts": {},
   "private": true,
   "dependencies": {
+    "@nx/nest": "^16.6.0",
     "@nx/next": "^16.6.0",
     "@nx/playwright": "^16.7.0-beta.1",
     "class-variance-authority": "^0.7.0",

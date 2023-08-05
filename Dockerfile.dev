@@ -1,0 +1,6 @@
+FROM node:18-alpine3.16 AS deps
+WORKDIR /repo
+RUN apk add g++ make py3-pip
+COPY package*.json ./
+RUN npm ci
+COPY ./ ./

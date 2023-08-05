@@ -1,0 +1,9 @@
+global:
+  namespace: 'brain_local'
+  nodeEnv: 'development'
+  apiHost: 'localhost'
+
+  image:
+    repository: "k8s.io"
+    version: "latest"
+    pullPolicy: IfNotPresent
