@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
-:where(html, body) {
-  @apply flex flex-1 flex-col h-full;
+:where(html) {
+  @apply flex flex-1 flex-col h-full w-full overflow-hidden;
+}
+
+:where(body) {
+  @apply flex h-full overflow-auto overflow-x-hidden;
 }

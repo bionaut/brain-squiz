@@ -1,3 +1,5 @@
+'use client'
+
 import { QuestionProps } from './question.types'
 import { Card } from '@brain-squiz/ui'
 import { QuestionOption } from './question-option'
@@ -11,6 +13,7 @@ export const Question = (props: QuestionProps) => {
       <div className={'flex flex-col'}>
         {options?.map((option, index) => (
           <QuestionOption
+            onSelect={() => {}}
             key={index}
             index={index + 1}
             isSelected={false}

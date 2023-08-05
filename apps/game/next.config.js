@@ -12,6 +12,17 @@ const nextConfig = {
     // See: https://github.com/gregberge/svgr
     svgr: false,
   },
+
+  experimental: {
+    serverActions: true,
+  },
+
+  rewrites: async () => [
+    {
+      source: '/game',
+      destination: '/game/scoreboard',
+    },
+  ],
 }
 
 const plugins = [

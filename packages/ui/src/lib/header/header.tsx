@@ -9,9 +9,7 @@ export function Header(props: HeaderProps) {
 
   return (
     <div className={'w-full shadow-lg bg-base-200 px-4'}>
-      <div
-        className={'container mx-auto flex py-2 justify-between items-center'}
-      >
+      <div className={'flex py-2 justify-between items-center'}>
         <Logo href={'/game'} />
         <div className={'space-x-2 flex items-center'}>
           {menuItems.map((item) => (
