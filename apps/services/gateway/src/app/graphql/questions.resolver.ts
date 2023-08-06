@@ -11,10 +11,19 @@ export class QuestionsResolver {
     @Inject('QUESTIONS_SERVICE') private questionsClient: ClientProxy,
   ) {}
 
+  @Query(() => Question)
+  async question(@Args('id') id: string) {
+    try {
+      return this.questionsClient.send('get-question', { id })
+    } catch (error) {
+      throw new GraphQLError('Error getting question')
+    }
+  }
+
   @Query((returns) => [Question])
   async questions(@Args('limit', { nullable: true }) limit?: number) {
     try {
-      return this.questionsClient.send('getQuestions', {
+      return this.questionsClient.send('get-questions', {
         limit,
       })
     } catch (error) {

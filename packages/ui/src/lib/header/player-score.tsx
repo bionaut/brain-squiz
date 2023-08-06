@@ -1,21 +1,20 @@
 'use client'
 
-import { PlayerCoins } from './player-coins'
+import { PlayerName } from './player-name'
 
 interface PlayerNameProps {
   playerName: string
-  score: number
 }
 
 export const PlayerScore = (props: PlayerNameProps) => {
-  const { playerName, score } = props
+  const { playerName } = props
 
   return (
     <div
       data-tip={`Playing as "${playerName}"`}
       className={'tooltip tooltip-accent tooltip-bottom cursor-pointer'}
     >
-      <PlayerCoins coins={score} />
+      <PlayerName playerName={playerName} />
     </div>
   )
 }

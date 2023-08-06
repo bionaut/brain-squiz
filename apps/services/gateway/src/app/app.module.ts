@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common'
+import { Logger, Module } from '@nestjs/common'
 import { GraphQLModule } from '@nestjs/graphql'
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo'
 import { ConfigModule } from '@nestjs/config'
@@ -6,6 +6,7 @@ import { envSchema } from '../env-schema'
 import { ClientsModule, Transport } from '@nestjs/microservices'
 import { QuestionsResolver } from './graphql/questions.resolver'
 import { PlayersResolver } from './graphql/players.resolver'
+import { GameResolver } from './graphql/game.resolver'
 
 @Module({
   imports: [
@@ -38,8 +39,18 @@ import { PlayersResolver } from './graphql/players.resolver'
         },
       },
     ]),
+    ClientsModule.register([
+      {
+        name: 'GAME_SERVICE',
+        transport: Transport.TCP,
+        options: {
+          host: 'game',
+          port: 3000,
+        },
+      },
+    ]),
   ],
   controllers: [],
-  providers: [QuestionsResolver, PlayersResolver],
+  providers: [QuestionsResolver, PlayersResolver, GameResolver, Logger],
 })
 export class AppModule {}

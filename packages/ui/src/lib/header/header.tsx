@@ -5,7 +5,7 @@ import { PlayerScore } from './player-score'
 import { HeaderMenuitem } from './header-menuitem'
 
 export function Header(props: HeaderProps) {
-  const { playerName, score, menuItems } = props
+  const { playerName, menuItems } = props
 
   return (
     <div className={'w-full shadow-lg bg-base-200 px-4'}>
@@ -15,7 +15,7 @@ export function Header(props: HeaderProps) {
           {menuItems.map((item) => (
             <HeaderMenuitem key={`header-menuitem-${item.href}`} {...item} />
           ))}
-          <PlayerScore playerName={playerName} score={score} />
+          <PlayerScore playerName={playerName} />
         </div>
       </div>
     </div>

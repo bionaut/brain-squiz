@@ -57,6 +57,21 @@ nerdctl_build(
     ]
 )
 
+nerdctl_build(
+    ref = 'k8s.io/game',
+    context = '.',
+    dockerfile = 'Dockerfile.dev',
+    ignore=[
+        "*",
+        "!apps/services/game/**",
+    ],
+    entrypoint='npm run nx -- serve services-game',
+    live_update=[
+        sync('./apps/services/game', '/repo/apps/services/game'),
+        run('npm install', trigger='./package.json'),
+    ]
+)
+
 # Services
 k8s_yaml(
     helm(
@@ -78,7 +93,33 @@ k8s_resource(
 )
 
 k8s_resource(
-    workload='gateway',
+    workload='game',
     labels=['NestJS'],
     resource_deps=['questions', 'player']
+)
+
+k8s_resource(
+    workload='gateway',
+    labels=['NestJS'],
+    resource_deps=['questions', 'player', 'game']
+)
+
+
+# DBs
+k8s_resource(
+    new_name='game-db',
+    labels=['DB'],
+    objects=['game-db']
+)
+
+k8s_resource(
+    new_name='questions-db',
+    labels=['DB'],
+    objects=['questions-db']
+)
+
+k8s_resource(
+    new_name='player-db',
+    labels=['DB'],
+    objects=['player-db']
 )

@@ -7,5 +7,4 @@ export interface HeaderProps {
   title: string
   menuItems: MenuItem[]
   playerName: string
-  score: number
 }

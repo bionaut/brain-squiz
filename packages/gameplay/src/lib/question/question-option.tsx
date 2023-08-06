@@ -2,23 +2,26 @@ import React from 'react'
 import { twMerge } from 'tailwind-merge'
 
 interface QuestionOptionProps {
-  onSelect: (index: number) => void
   isSelected: boolean
   text: string
   index: number
+  isCorrect?: boolean
+  isIncorrect?: boolean
+  onClick: () => void
 }
 
 export const QuestionOption = (props: QuestionOptionProps) => {
-  const { index, text, isSelected, onSelect } = props
+  const { index, text, isIncorrect, isCorrect, onClick } = props
 
   const classes = twMerge(
     'flex flex-row space-x-2 items-center w-full px-4 py-2 my-2 rounded-lg cursor-pointer',
-    'hover:bg-base-300',
-    isSelected ? 'bg-blue-200 text-white' : 'bg-base-200',
+    !isCorrect && !isIncorrect && 'hover:bg-base-300',
+    isCorrect && 'bg-green-500 text-white',
+    isIncorrect && 'bg-red-500 text-white',
   )
 
   return (
-    <div onClick={() => onSelect(index)} className={classes}>
+    <div className={classes} onClick={onClick}>
       <span className={'font-bold bg-base-300/50 rounded-lg p-4'}>{index}</span>
       <span>{text}</span>
     </div>

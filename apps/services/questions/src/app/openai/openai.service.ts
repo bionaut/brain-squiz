@@ -16,8 +16,6 @@ export class OpenaiService {
       apiKey: config.getOrThrow('OPENAI_API_KEY'),
     })
 
-    console.log(configuration)
-
     this.api = new OpenAIApi(configuration)
   }
 

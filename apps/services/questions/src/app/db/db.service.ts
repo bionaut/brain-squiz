@@ -3,9 +3,9 @@ import { Injectable, Logger } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { drizzle, PostgresJsDatabase } from 'drizzle-orm/postgres-js'
 import { migrate } from 'drizzle-orm/postgres-js/migrator'
+import { eq, sql as s } from 'drizzle-orm'
 
 import { questions, TQuestion } from './schema'
-import { sql as s } from 'drizzle-orm'
 
 @Injectable()
 export class DbService {
@@ -67,5 +67,19 @@ export class DbService {
       .orderBy(s`RANDOM()`)
       .limit(limit)
       .execute()
+  }
+
+  public async getQuestion(id: number): Promise<TQuestion | null> {
+    const matched = await this.db
+      .select()
+      .from(questions)
+      .where(eq(questions.id, id))
+      .execute()
+
+    if (matched.length === 0) {
+      return null
+    }
+
+    return matched[0]
   }
 }

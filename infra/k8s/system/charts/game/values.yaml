@@ -1,0 +1,8 @@
+appName: game
+servicePort: 3000
+containerPort: 3000
+
+image:
+  repository: "k8s.io"
+  version: "latest"
+  pullPolicy: IfNotPresent

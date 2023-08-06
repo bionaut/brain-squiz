@@ -1,3 +1,3 @@
-export * from './lib/context'
-export * from './lib/leaderboard'
-export * from './lib/question'
+export { useGameplay, GameplayProvider, GameplayContext } from './lib/context'
+export { Leaderboard } from './lib/leaderboard'
+export { Question } from './lib/question'

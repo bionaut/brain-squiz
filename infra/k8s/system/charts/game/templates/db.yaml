@@ -1,0 +1,25 @@
+apiVersion: "acid.zalan.do/v1"
+kind: postgresql
+metadata:
+  name: '{{ .Values.appName }}-db'
+  namespace: {{.Values.global.namespace}}
+spec:
+  teamId: engeto
+  volume:
+    size: 1Gi
+  numberOfInstances: 1
+  enableMasterLoadBalancer: true
+  users:
+    # admin user
+    admin:
+      - superuser
+      - createdb
+    # application user
+    app:
+      - login
+  # default database user (owner)
+  databases:
+    gamedb: app
+  postgresql:
+    version: "15"
+

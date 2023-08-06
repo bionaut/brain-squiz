@@ -3,9 +3,9 @@ import { Injectable, Logger } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { drizzle, PostgresJsDatabase } from 'drizzle-orm/postgres-js'
 import { migrate } from 'drizzle-orm/postgres-js/migrator'
-import { eq, desc, asc } from 'drizzle-orm'
 
-import { players, TPlayer } from './schema'
+import { games, insertGameSchema, TGame } from './schema'
+import { eq } from 'drizzle-orm'
 
 @Injectable()
 export class DbService {
@@ -18,7 +18,7 @@ export class DbService {
     private readonly config: ConfigService,
     private readonly logger: Logger,
   ) {
-    const DB_HOST = 'player-db'
+    const DB_HOST = 'game-db'
     const DB_PORT = config.getOrThrow('DB_PORT')
     const DB_USER = config.getOrThrow('DB_USER')
     const DB_PASSWORD = config.getOrThrow('DB_PASSWORD')
@@ -44,7 +44,7 @@ export class DbService {
 
     // migrate the database
     migrate(this.db, {
-      migrationsFolder: 'apps/services/player/src/app/db/schema/migrations',
+      migrationsFolder: 'apps/services/game/src/app/db/schema/migrations',
     })
       .then(() => {
         this.logger.log('🟢 Successfully migrated database')
@@ -55,16 +55,32 @@ export class DbService {
       })
   }
 
-  public async createPlayer(data: TPlayer) {
-    await this.db.insert(players).values(data).execute()
-    return this.getPlayer(data.name)
+  public async createGame(playerName: string, questionIds: string[]) {
+    const game = insertGameSchema.parse({
+      playerName,
+      questionIds,
+      createdAt: new Date(),
+      score: 0,
+    }) as TGame
+
+    const newGame = await this.db
+      .insert(games)
+      .values(game)
+      .returning()
+      .execute()
+
+    if (newGame.length === 0) {
+      return null
+    }
+
+    return newGame[0]
   }
 
-  public async getPlayer(name: string): Promise<TPlayer> {
+  public async getGame(id: number) {
     const matched = await this.db
       .select()
-      .from(players)
-      .where(eq(players.name, name))
+      .from(games)
+      .where(eq(games.id, id))
       .execute()
 
     if (matched.length === 0) {
@@ -74,22 +90,27 @@ export class DbService {
     return matched[0]
   }
 
-  public async getTopPlayers(limit: number): Promise<TPlayer[]> {
-    return await this.db
-      .select()
-      .from(players)
-      .orderBy(desc(players.score))
-      .limit(limit)
-      .execute()
-  }
+  public async finishGame(id: number, score: number) {
+    const game = await this.getGame(id)
 
-  public async updateScore(playerName: string, score: number) {
-    const player = await this.getPlayer(playerName)
+    if (!game) {
+      throw new Error(`Game with id ${id} not found`)
+    }
 
-    await this.db
-      .update(players)
-      .set({ score: player.score + score })
-      .where(eq(players.name, playerName))
+    const updatedGame = await this.db
+      .update(games)
+      .set({
+        score,
+        finishedAt: new Date(),
+      })
+      .where(eq(games.id, id))
+      .returning()
       .execute()
+
+    if (updatedGame.length === 0) {
+      return null
+    }
+
+    return updatedGame[0]
   }
 }

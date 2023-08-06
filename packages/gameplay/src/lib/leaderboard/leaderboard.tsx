@@ -1,5 +1,3 @@
-'use client'
-
 import { LeaderboardProps } from './leaderboard.types'
 import { Card } from '@brain-squiz/ui'
 

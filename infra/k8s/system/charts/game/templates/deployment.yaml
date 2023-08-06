@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.appName }}
+  namespace: {{ .Values.global.namespace}}
+  labels:
+    app: {{ .Values.appName }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.appName }}
+      type: backend
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.appName }}
+        type: backend
+
+    spec:
+      restartPolicy: Always
+      containers:
+        - name: '{{ .Values.appName }}'
+          image: '{{ .Values.image.repository}}/{{ .Values.appName }}:{{ .Values.image.version }}'
+          ports:
+            - containerPort: {{ .Values.containerPort }}
+              protocol: TCP
+          env:
+            - name: PORT
+              value: "{{ .Values.containerPort }}"
+            - name: NODE_ENV
+              value: "development"
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: 'app.{{ .Values.appName }}-db.credentials.postgresql.acid.zalan.do'
+                  key: username
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: 'app.{{ .Values.appName }}-db.credentials.postgresql.acid.zalan.do'
+                  key: password
+            - name: DB_HOST
+              value: '{{ .Values.appName }}.default.svc.cluster.local'
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_NAME
+              value: gamedb

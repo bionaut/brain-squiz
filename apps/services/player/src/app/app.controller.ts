@@ -33,6 +33,18 @@ export class AppController {
     return await this.dbService.getPlayer(name)
   }
 
+  @MessagePattern('update-score')
+  async updateScore({
+    playerName,
+    score,
+  }: {
+    playerName: string
+    score: number
+  }) {
+    this.logger.log(`Updating player ${playerName} score to ${score}`)
+    return await this.dbService.updateScore(playerName, score)
+  }
+
   @MessagePattern('top-players')
   async topPlayers({ limit }: { limit: number }) {
     this.logger.log(`Getting top players`)

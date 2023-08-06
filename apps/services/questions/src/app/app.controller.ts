@@ -38,7 +38,7 @@ export class AppController {
     await this.dbService.saveQuestions(questionsArray)
   }
 
-  @MessagePattern('getQuestions')
+  @MessagePattern('get-questions')
   async getQuestions(data: { limit: number }) {
     const { limit } = data
 
@@ -52,5 +52,17 @@ export class AppController {
 
     this.logger.log(`Getting ${limit} questions`)
     return await this.dbService.getQuestions(limit)
+  }
+
+  @MessagePattern('get-question')
+  async getQuestion(data: { id: string }) {
+    const { id } = data
+
+    if (!id) {
+      throw new Error('Id must be provided')
+    }
+
+    this.logger.log(`Getting question ${id}`)
+    return await this.dbService.getQuestion(Number(id))
   }
 }
