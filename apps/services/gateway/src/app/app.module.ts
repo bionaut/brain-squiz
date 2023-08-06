@@ -5,6 +5,7 @@ import { ConfigModule } from '@nestjs/config'
 import { envSchema } from '../env-schema'
 import { ClientsModule, Transport } from '@nestjs/microservices'
 import { QuestionsResolver } from './graphql/questions.resolver'
+import { PlayersResolver } from './graphql/players.resolver'
 
 @Module({
   imports: [
@@ -27,8 +28,18 @@ import { QuestionsResolver } from './graphql/questions.resolver'
         },
       },
     ]),
+    ClientsModule.register([
+      {
+        name: 'PLAYER_SERVICE',
+        transport: Transport.TCP,
+        options: {
+          host: 'player',
+          port: 3000,
+        },
+      },
+    ]),
   ],
   controllers: [],
-  providers: [QuestionsResolver],
+  providers: [QuestionsResolver, PlayersResolver],
 })
 export class AppModule {}

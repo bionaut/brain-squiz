@@ -4,8 +4,17 @@ import React from 'react'
 import { useForm } from 'react-hook-form'
 import { twMerge } from 'tailwind-merge'
 import { useRouter } from 'next/navigation'
-import { setPlayer } from '../actions/set-player'
 import { useGameplay } from '@brain-squiz/gameplay'
+import { gql, useMutation } from '@apollo/client'
+
+const createPlayerMutation = gql`
+  mutation CreatePlayer($name: String!) {
+    createPlayer(name: $name) {
+      name
+      score
+    }
+  }
+`
 
 interface FormValues {
   player: string
@@ -14,6 +23,7 @@ interface FormValues {
 export const WelcomeWidget = () => {
   const router = useRouter()
   const [, dispatch] = useGameplay()
+  const [createPlayer, { loading }] = useMutation(createPlayerMutation)
 
   const { register, handleSubmit, formState } = useForm<FormValues>({
     defaultValues: {
@@ -22,9 +32,12 @@ export const WelcomeWidget = () => {
   })
 
   const submitHandler = async (data: FormValues) => {
-    const { ok } = await setPlayer(data)
-    if (ok) {
-      dispatch({ type: 'SET_PLAYER', payload: data.player })
+    const { data: playerData } = await createPlayer({
+      variables: { name: data.player },
+    })
+
+    if (playerData.createPlayer) {
+      dispatch({ type: 'SET_PLAYER', payload: playerData.createPlayer.name })
       router.push('/game')
     }
   }
@@ -62,6 +75,7 @@ export const WelcomeWidget = () => {
           How to play?
         </button>
         <button
+          disabled={loading}
           type={'submit'}
           title={'start game'}
           className={'btn btn-primary self-end'}

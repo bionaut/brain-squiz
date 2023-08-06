@@ -1,7 +1,7 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql'
 
 import { Question } from './models/questions.model'
-import { Inject, Logger } from '@nestjs/common'
+import { Inject } from '@nestjs/common'
 import { ClientProxy } from '@nestjs/microservices'
 import { GraphQLError } from 'graphql/error'
 

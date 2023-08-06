@@ -45,16 +45,4 @@ spec:
             - name: DB_PORT
               value: "5432"
             - name: DB_NAME
-              value: questionsdb
-
-            - name: OPENAI_API_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: openai-secret
-                  key: secret
-
-            - name: OPENAI_ORG_ID
-              valueFrom:
-                secretKeyRef:
-                  name: openai-secret
-                  key: org
+              value: playerdb

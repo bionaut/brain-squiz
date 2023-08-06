@@ -22,6 +22,10 @@ const nextConfig = {
       source: '/game',
       destination: '/game/scoreboard',
     },
+    {
+      source: '/graphql',
+      destination: 'http://localhost/graphql',
+    },
   ],
 }
 

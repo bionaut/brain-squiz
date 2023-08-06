@@ -1,5 +1,5 @@
 export interface LeaderboardItem {
-  player: string
+  name: string
   score: number
 }
 

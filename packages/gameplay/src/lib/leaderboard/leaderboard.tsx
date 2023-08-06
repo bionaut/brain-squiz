@@ -1,3 +1,5 @@
+'use client'
+
 import { LeaderboardProps } from './leaderboard.types'
 import { Card } from '@brain-squiz/ui'
 
@@ -16,12 +18,12 @@ export const Leaderboard = (props: LeaderboardProps) => {
       <div className={'flex w-full flex-1 flex-col space-y-2 items-center'}>
         {items?.map((item, index) => (
           <div
-            key={item.player}
+            key={item.name}
             className={'flex flex-row justify-between w-full max-w-xl'}
           >
             <span className={'text-2xl space-x-2'}>
               <span>{index + 1}.</span>
-              <span>{item.player}</span>
+              <span>{item.name}</span>
             </span>
             <span>{item.score}</span>
           </div>

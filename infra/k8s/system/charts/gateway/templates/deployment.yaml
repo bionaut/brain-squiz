@@ -25,3 +25,8 @@ spec:
           ports:
             - containerPort: {{ .Values.containerPort }}
               protocol: TCP
+          env:
+            - name: PORT
+              value: "{{ .Values.containerPort }}"
+            - name: NODE_ENV
+              value: "development"

@@ -42,6 +42,21 @@ nerdctl_build(
     ]
 )
 
+nerdctl_build(
+    ref = 'k8s.io/player',
+    context = '.',
+    dockerfile = 'Dockerfile.dev',
+    ignore=[
+        "*",
+        "!apps/services/player/**",
+    ],
+    entrypoint='npm run nx -- serve services-player',
+    live_update=[
+        sync('./apps/services/player', '/repo/apps/services/player'),
+        run('npm install', trigger='./package.json'),
+    ]
+)
+
 # Services
 k8s_yaml(
     helm(
@@ -55,7 +70,15 @@ k8s_resource(
     labels=['NestJS']
 )
 
+
+k8s_resource(
+    workload='player',
+    labels=['NestJS'],
+    resource_deps=['questions']
+)
+
 k8s_resource(
     workload='gateway',
-    labels=['NestJS']
+    labels=['NestJS'],
+    resource_deps=['questions', 'player']
 )
