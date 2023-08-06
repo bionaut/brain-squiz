@@ -1,8 +1,13 @@
 'use client'
 
-import { GameplayProvider } from '@brain-squiz/gameplay'
 import { PropsWithChildren } from 'react'
+import { GameplayProvider } from '@brain-squiz/gameplay'
+import { ApolloProvider } from '../gql/client-provider'
 
 export const Providers = ({ children }: PropsWithChildren) => {
-  return <GameplayProvider>{children}</GameplayProvider>
+  return (
+    <ApolloProvider>
+      <GameplayProvider>{children}</GameplayProvider>
+    </ApolloProvider>
+  )
 }
