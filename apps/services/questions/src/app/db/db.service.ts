@@ -5,6 +5,7 @@ import { drizzle, PostgresJsDatabase } from 'drizzle-orm/postgres-js'
 import { migrate } from 'drizzle-orm/postgres-js/migrator'
 
 import { questions, TQuestion } from './schema'
+import { sql as s } from 'drizzle-orm'
 
 @Injectable()
 export class DbService {
@@ -28,6 +29,7 @@ export class DbService {
     this.client = postgres(connectionString, {
       ssl: 'require',
     })
+
     this.db = drizzle(this.client)
 
     // test the connection
@@ -55,6 +57,15 @@ export class DbService {
 
   public async saveQuestions(values: TQuestion[]): Promise<void> {
     const res = await this.db.insert(questions).values(values).execute()
-    // console.log(res)
+    this.logger.log(`Inserted ${res.count} questions`)
+  }
+
+  public async getQuestions(limit: number): Promise<TQuestion[]> {
+    return await this.db
+      .select()
+      .from(questions)
+      .orderBy(s`RANDOM()`)
+      .limit(limit)
+      .execute()
   }
 }

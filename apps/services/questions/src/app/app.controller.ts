@@ -1,4 +1,4 @@
-import { Controller, Get, Logger } from '@nestjs/common'
+import { Controller, Logger } from '@nestjs/common'
 import { EventPattern, MessagePattern } from '@nestjs/microservices'
 
 import { DbService } from './db/db.service'
@@ -14,7 +14,17 @@ export class AppController {
   ) {}
 
   @EventPattern('generate')
-  async generate(count: number = 10) {
+  async generate(data: { count: number }) {
+    const { count } = data
+
+    if (!count) {
+      throw new Error('Count must be provided')
+    }
+
+    if (typeof data.count !== 'number') {
+      throw new Error('Count must be a number')
+    }
+
     this.logger.log(`Generating ${count} questions`)
     const questions = await this.openaiService.generateQuestionsPrompt(count)
 
@@ -26,5 +36,21 @@ export class AppController {
 
     this.logger.log('Saving questions')
     await this.dbService.saveQuestions(questionsArray)
+  }
+
+  @MessagePattern('getQuestions')
+  async getQuestions(data: { limit: number }) {
+    const { limit } = data
+
+    if (!limit) {
+      throw new Error('Limit must be provided')
+    }
+
+    if (typeof data.limit !== 'number') {
+      throw new Error('Limit must be a number')
+    }
+
+    this.logger.log(`Getting ${limit} questions`)
+    return await this.dbService.getQuestions(limit)
   }
 }

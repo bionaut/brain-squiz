@@ -70,7 +70,7 @@ describe('AppController', () => {
         JSON.stringify(data),
       )
 
-      await appController['generate'](count)
+      await appController['generate']({ count })
 
       expect(openaiService.generateQuestionsPrompt).toBeCalledWith(count)
       expect(dbService.saveQuestions).toBeCalledWith(data)

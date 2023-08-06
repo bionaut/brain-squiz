@@ -27,6 +27,21 @@ nerdctl_build(
     ]
 )
 
+nerdctl_build(
+    ref = 'k8s.io/gateway',
+    context = '.',
+    dockerfile = 'Dockerfile.dev',
+    ignore=[
+        "*",
+        "!apps/services/gateway/**",
+    ],
+    entrypoint='npm run nx -- serve services-gateway',
+    live_update=[
+        sync('./apps/services/gateway', '/repo/apps/services/gateway'),
+        run('npm install', trigger='./package.json'),
+    ]
+)
+
 # Services
 k8s_yaml(
     helm(
@@ -37,5 +52,10 @@ k8s_yaml(
 
 k8s_resource(
     workload='questions',
+    labels=['NestJS']
+)
+
+k8s_resource(
+    workload='gateway',
     labels=['NestJS']
 )

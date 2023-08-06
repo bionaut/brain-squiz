@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.appName }}
+  namespace: {{ .Values.global.namespace}}
+  labels:
+    app: {{ .Values.appName }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.appName }}
+      type: backend
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.appName }}
+        type: backend
+
+    spec:
+      restartPolicy: Always
+      containers:
+        - name: '{{ .Values.appName }}'
+          image: '{{ .Values.image.repository}}/gateway:{{ .Values.image.version }}'
+          ports:
+            - containerPort: {{ .Values.containerPort }}
+              protocol: TCP
